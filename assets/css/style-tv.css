@@ -1,0 +1,69 @@
+/* 1. Reset Básico: Tira as margens padrão do navegador */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*2. O Corpo da Página ( Aqui entra a planta baixa e o alinhamento principal)*/
+body{
+    /* Define a planta como papel de parede e manda cobrir a tela toda */
+    background-image: url('../img/FUNDO.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    /* 100vh significa "100% da altura da tela (Viewport Height)" */
+    height: 100vh;
+
+    /* Ativa o Flexbox para alinhar os itens no centro */
+    display: flex;
+    flex-direction: column; /* Coloca os itens em coluna (um embaixo do outro) */
+    align-items: center; /* Centraliza na horizontal*/
+
+    /* Define uma fonte limpa e sem serifa */
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Container das logos */
+.logos-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px; /* Cria um espaço entre as duas logos */
+    margin-top: 4rem; /* Dá um respito entre as logos e o topo da TV */
+
+}
+
+/* Tamanho das logos (pode alterar esse valor depois para ajustar) */
+.logos-container img {
+    height: 300px;
+}
+
+/* 4. Container do Texto */
+.conteudo-central {
+    /*flex-grow: 1; /* Faz esse containter crescer e empurrar o texto para o meio da tela */
+    display:flex;
+    flex-direction: column;
+    /*justify-content: center;*/
+    text-align: center;
+    margin-top: 80px;
+}
+
+/* Estilo dos Nomes dos Clientes */
+#nome-cliente {
+    font-size: 8rem; /* Tamanho gigante para TV*/
+    font-weight: bold;
+    color: black;
+    margin-bottom: 20px;
+}
+
+/* Estilo de mensagem "Bem vindos" */
+
+#mensagem-boas-vindas {
+    font-size: 4rem;
+    font-weight: normal;
+    color: #333;
+    letter-spacing: 8px; /* Espaçamento entre as letras */
+    margin-top: 20px;
+}
