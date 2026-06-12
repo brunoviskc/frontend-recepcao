@@ -26,7 +26,13 @@ async function iniciarTV(){
     const todasAsReunioes = await buscarReunioesNaAPI();
 
     //2. Descobre a data de hoje pelo sistema (Formato YYYY-MM-DD)
-    const dataHoje = new Date().toISOString().split('T')[0];
+    // Pega a data local do computador
+    const dataLocal = new Date();
+    const ano = dataLocal.getFullYear();
+    const mes = String(dataLocal.getMonth() + 1).padStart(2, '0'); // Garante que terá 2 dígitos (ex: 06)
+    const dia = String(dataLocal.getDate()).padStart(2, '0');
+    // Junta tudo no formato YYYY-MM-DD
+    const dataHoje = `${ano}-${mes}-${dia}`;
 
     //3. Filtra a lista: Guarda apenas as reuniões cuja data seja igual a de hoje
     reunioesDeHoje = todasAsReunioes.filter(reuniao => reuniao.dataReuniao === dataHoje);
@@ -74,7 +80,13 @@ function exibirTelaVazia() {
 // Função silenciosa para o loop de 1 minuto (Polling)
 async function buscarNovamente(){
     const todasAsReunioes = await buscarReunioesNaAPI();
-    const dataHoje = new Date().toISOString().split('T')[0];
+    
+    const dataLocal = new Date();
+    const ano = dataLocal.getFullYear();
+    const mes = String(dataLocal.getMonth() + 1).padStart(2, '0');
+    const dia = String(dataLocal.getDate()).padStart(2, '0');
+    const dataHoje = `${ano}-${mes}-${dia}`;
+    
     reunioesDeHoje = todasAsReunioes.filter(reuniao => reuniao.dataReuniao === dataHoje);
 
     if (reunioesDeHoje.length === 0) {
