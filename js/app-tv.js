@@ -14,90 +14,96 @@
 
 //-------------------------------------------------------------------------------------------
 
-// Variáveis globais para controlar o nosso "carrosel"
+// Variável global para armazenar a lista de agendamentos do dia
 let reunioesDeHoje = [];
-let indiceAtual = 0;
 
-// Função principal que inicia a TV
-async function iniciarTV(){
-    console.log("Iniciando a TV...");
+// 1. Função principal que inicia a TV
+async function iniciarTV() {
+    console.log("Iniciando a TV com Inteligência de Horário (+/- 30 min)...");
 
-    //1. Busca todos os dados da API Jaca
+    // Processa a agenda pela primeira vez assim que a página abre
+    await processarAgenda();
+
+    // Polling: Roda a cada 1 minuto (60.000 ms) silenciosamente.
+    // Ele busca novos dados na API E recalcula se já deu a hora de trocar a tela.
+    setInterval(processarAgenda, 60000);
+}
+
+// 2. Função responsável por buscar no Java e filtrar a data de hoje
+async function processarAgenda() {
     const todasAsReunioes = await buscarReunioesNaAPI();
 
-    //2. Descobre a data de hoje pelo sistema (Formato YYYY-MM-DD)
-    // Pega a data local do computador
-    const dataLocal = new Date();
-    const ano = dataLocal.getFullYear();
-    const mes = String(dataLocal.getMonth() + 1).padStart(2, '0'); // Garante que terá 2 dígitos (ex: 06)
-    const dia = String(dataLocal.getDate()).padStart(2, '0');
-    // Junta tudo no formato YYYY-MM-DD
-    const dataHoje = `${ano}-${mes}-${dia}`;
-
-    //3. Filtra a lista: Guarda apenas as reuniões cuja data seja igual a de hoje
-    reunioesDeHoje = todasAsReunioes.filter(reuniao => reuniao.dataReuniao === dataHoje);
-
-    //4. Toma uma decisão: tem reuniao para hoje?
-    if(reunioesDeHoje.length > 0) {
-        atualizarTela(); // Pinta a tela com o primeiro cliente
-        // Inicia o loop do carrossel (muda de slide a cada 10.000 milissegundos = 10s)
-        setInterval(proximoSlide, 10000);
-    } else {
-        exibirTelaVazia(); // Pintar a tela de "Agenda Livre"
-    }
-
-    //5. Polling: Vai na API buscar novos agendamentos a cada 1 minuto (60000 ms) silenciosamente
-    setInterval(buscarNovamente, 60000);
-}
-
-// Função que injeta o texto real no HTML (Manipulação de DOM)
-function atualizarTela(){
-    const reuniao = reunioesDeHoje[indiceAtual];
-
-    // Pega as tags <h1> e <h2> pelo ID e troca o texto delas
-    document.getElementById('nome-cliente').innerText = reuniao.nomeCliente;
-    document.getElementById('mensagem-boas-vindas').innerText = "BEM VINDOS À NOSSA FÁBRICA";
-}
-
-// Função para pular para o proxímo cliente no carrossel
-function proximoSlide(){
-    indiceAtual++; // Soma 1 no índice
-
-    // Se chegou no final da lista, volta para o primeiro (índice 0)
-    if (indiceAtual >= reunioesDeHoje.length){
-        indiceAtual = 0;
-    }
-
-    atualizarTela();
-}
-
-// Função caso não tem ninguém marcado para o dia
-function exibirTelaVazia() {
-    document.getElementById('nome-cliente').innerText = "";
-    document.getElementById('mensagem-boas-vindas').innerText = "BEM VINDO À NOSSA FÁBRICA"
-}
-
-// Função silenciosa para o loop de 1 minuto (Polling)
-async function buscarNovamente(){
-    const todasAsReunioes = await buscarReunioesNaAPI();
-    
+    // Pega a data local do computador (Evita bug do fuso UTC de Londres)
     const dataLocal = new Date();
     const ano = dataLocal.getFullYear();
     const mes = String(dataLocal.getMonth() + 1).padStart(2, '0');
     const dia = String(dataLocal.getDate()).padStart(2, '0');
     const dataHoje = `${ano}-${mes}-${dia}`;
-    
+
+    // Guarda apenas as reuniões de hoje
     reunioesDeHoje = todasAsReunioes.filter(reuniao => reuniao.dataReuniao === dataHoje);
 
-    if (reunioesDeHoje.length === 0) {
-        exibirTelaVazia();
-    } else if (indiceAtual >= reunioesDeHoje.length) {
-        // Se o array diminuiu (alguém deletou uma reunião) e o índice se perdeu, reseta
-        indiceAtual = 0;
-        atualizarTela();
+    // Chama o cérebro da TV para decidir o que pintar na tela agora
+    decidirOQueMostrarNaTela();
+}
+
+// 3. O Cérebro: Toma a decisão baseada no relógio atual
+function decidirOQueMostrarNaTela() {
+    const agora = new Date();
+    const minutosAtuais = (agora.getHours() * 60) + agora.getMinutes();
+
+    // Ordena as reuniões de hoje por ordem cronológica (da mais cedo para a mais tarde)
+    reunioesDeHoje.sort((a, b) => converterHoraParaMinutos(a.horaReuniao) - converterHoraParaMinutos(b.horaReuniao));
+
+    let reuniaoAtiva = null;
+
+    // Varre todas as reuniões agendadas para hoje
+    for (let reuniao of reunioesDeHoje) {
+        const minutosReuniao = converterHoraParaMinutos(reuniao.horaReuniao);
+
+        // Regra de Negócio: Janela de 60 minutos total
+        const inicioExibicao = minutosReuniao - 30; // 30 minutos ANTES
+        const fimExibicao = minutosReuniao + 30;    // 30 minutos DEPOIS
+
+        // Se o relógio atual estiver dentro dessa janela, encontramos a reunião da vez!
+        if (minutosAtuais >= inicioExibicao && minutosAtuais <= fimExibicao) {
+            reuniaoAtiva = reuniao;
+            break; // O 'break' interrompe o loop e TRAVA esse cliente na tela!
+        }
+    }
+
+    // Aplica na tela o resultado da decisão
+    if (reuniaoAtiva !== null) {
+        exibirTelaCliente(reuniaoAtiva.nomeCliente);
+    } else {
+        exibirTelaDefault();
     }
 }
 
-// O gatilho: Executa a função principal assim que o arquivo carregar
+// --- FUNÇÕES UTILITÁRIAS E DE MANIPULAÇÃO DE TELA (DOM) ---
+
+// Converte texto de hora ("14:30:00") em minutos totais do dia (870)
+function converterHoraParaMinutos(horaString) {
+    if (!horaString) return 0;
+    const partes = horaString.split(':');
+    return (parseInt(partes[0], 10) * 60) + parseInt(partes[1], 10);
+}
+
+// Pinta a tela com o nome do cliente (Durante a janela dos +/- 30 min)
+function exibirTelaCliente(nome) {
+    // Se você tiver criado as divs separadas no HTML, podemos alterná-las aqui.
+    // Usando a sua estrutura base:
+    document.getElementById('nome-cliente').innerText = nome;
+    document.getElementById('mensagem-boas-vindas').innerText = "BEM VINDO À NOSSA FÁBRICA";
+}
+
+// Pinta a tela Padrão/Standby (Quando não há reuniões na janela de tempo)
+function exibirTelaDefault() {
+    // Aqui a TV fica em modo de espera (sem nome de cliente)
+    document.getElementById('nome-cliente').innerText = "";
+    document.getElementById('mensagem-boas-vindas').innerText = "BEM VINDO À NOSSA FÁBRICA";
+}
+
+// O gatilho: Executa a função principal assim que o script é carregado pelo navegador
 iniciarTV();
 
