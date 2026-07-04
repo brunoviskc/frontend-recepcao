@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - OG Ambientes</title>
+    <!-- Google Fonts: Inter para tipografia limpa e corporativa -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Folha de estilo personalizada -->
+    <link rel="stylesheet" href="assets/css/style-admin.css">
+</head>
+<body>
+    <!-- Cabeçalho Corporativo -->
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="logos-container">
+                <img src="assets/img/LOGO-3D.svg" alt="Logo OG Ambientes" class="logo-principal">
+                <span class="logo-divider"></span>
+                <span class="painel-titulo">Painel de Recepção</span>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html" class="btn-tv-link" target="_blank">
+                    Visualizar Tela TV 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-external"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="admin-container">
+        <!-- Grid de Gestão -->
+        <div class="admin-grid">
+            
+            <!-- Coluna Esquerda: Formulário de Gerenciamento -->
+            <section class="form-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 id="titulo-formulario" class="card-title">Agendar Nova Reunião</h2>
+                        <p class="card-subtitle">Insira os dados do agendamento para exibição imediata no painel</p>
+                        <p class="form-help-info">
+                            <span class="info-badge">Regra de Ocupação</span> A TV exibe o cliente 10 min antes e 10 min depois do agendamento. O sistema bloqueia novos agendamentos com intervalo menor que 10 min na mesma data.
+                        </p>
+                    </div>
+
+                    <!-- Div de Alertas Visuais (Feedback de Erros e Sucessos) -->
+                    <div class="alerts-container">
+                        <div id="alerta-erro" class="alert alert-danger escondido" role="alert">
+                            <span class="alert-icon">⚠️</span>
+                            <span id="alerta-erro-mensagem" class="alert-message"></span>
+                            <button type="button" class="alert-close" onclick="fecharAlerta('alerta-erro')">&times;</button>
+                        </div>
+                        
+                        <div id="alerta-sucesso" class="alert alert-success escondido" role="alert">
+                            <span class="alert-icon">✓</span>
+                            <span id="alerta-sucesso-mensagem" class="alert-message"></span>
+                            <button type="button" class="alert-close" onclick="fecharAlerta('alerta-sucesso')">&times;</button>
+                        </div>
+                    </div>
+
+                    <form id="form-reuniao" class="reuniao-form" novalidate>
+                        <!-- Data e Hora em Grid de duas colunas -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dataReuniao">Data da Reunião</label>
+                                <input type="date" id="dataReuniao" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="horaReuniao">Hora da Reunião</label>
+                                <input type="time" id="horaReuniao" required>
+                            </div>
+                        </div>
+
+                        <!-- Nome do Cliente -->
+                        <div class="form-group">
+                            <label for="nomeCliente">Nome do Cliente</label>
+                            <input type="text" id="nomeCliente" placeholder="Digite o nome completo do cliente" required autocomplete="off">
+                        </div>
+
+                        <!-- Nome do Arquiteto -->
+                        <div class="form-group">
+                            <label for="nomeArquiteto">Nome do Arquiteto</label>
+                            <input type="text" id="nomeArquiteto" placeholder="Digite o nome do arquiteto responsável" required autocomplete="off">
+                        </div>
+
+                        <!-- Nome do Consultor -->
+                        <div class="form-group">
+                            <label for="nomeConsultor">Nome do Consultor (Vendedor)</label>
+                            <input type="text" id="nomeConsultor" placeholder="Digite o nome do consultor OG" required autocomplete="off">
+                        </div>
+
+                        <!-- Ações do Formulário -->
+                        <div class="form-actions">
+                            <button type="submit" id="btn-submit" class="btn btn-primary">
+                                <span id="btn-submit-texto">Confirmar Agendamento</span>
+                                <span class="spinner escondido" id="btn-submit-spinner"></span>
+                            </button>
+                            <button type="button" id="btn-cancelar" class="btn btn-secondary escondido">
+                                Cancelar Edição
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Coluna Direita: Tabela (Data Grid) de Reuniões -->
+            <section class="table-section">
+                <div class="card table-card">
+                    <div class="card-header table-header-flex">
+                        <div>
+                            <h2 class="card-title">Próximos Agendamentos</h2>
+                            <p class="card-subtitle">Listagem de todas as reuniões futuras programadas na fábrica</p>
+                        </div>
+                        <div class="table-actions">
+                            <button id="btn-atualizar" class="btn-refresh" title="Atualizar dados da tabela">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-refresh"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                Atualizar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tabela responsiva wrapper -->
+                    <div class="table-wrapper">
+                        <table class="data-grid">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Hora</th>
+                                    <th>Cliente</th>
+                                    <th>Arquiteto</th>
+                                    <th>Consultor</th>
+                                    <th class="actions-header">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-corpo">
+                                <!-- As linhas serão preenchidas dinamicamente via JS -->
+                                <tr id="linha-loading">
+                                    <td colspan="6" class="td-mensagem">
+                                        <div class="loading-state">
+                                            <span class="spinner text-spinner"></span>
+                                            Carregando agendamentos...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr id="linha-vazia" class="escondido">
+                                    <td colspan="6" class="td-mensagem td-vazio">
+                                        Nenhuma reunião futura agendada no momento.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Modais/Dialogs customizados se necessário ou Rodapé -->
+    <footer class="admin-footer">
+        <p>&copy; 2026 OG Ambientes. Todos os direitos reservados. Sistema de Recepção Corporativa.</p>
+    </footer>
+
+    <!-- Carregamento das camadas JavaScript -->
+    <script src="js/api.js"></script>
+    <script src="js/app-admin.js"></script>
+</body>
+</html>

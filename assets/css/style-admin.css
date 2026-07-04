@@ -1,0 +1,611 @@
+/* ==========================================================================
+   CSS DO PAINEL ADMINISTRATIVO - OG AMBIENTES
+   Estética Corporativa, Alto Padrão, Sóbria e Responsiva
+   ========================================================================== */
+
+/* 1. Variáveis Globais (Design Tokens) */
+:root {
+    --font-primary: 'Inter', sans-serif;
+
+    /* Paleta de Cores */
+    --color-bg-primary: #f4f6f8;
+    --color-bg-card: #ffffff;
+    --color-header: #12161b;
+    --color-text-main: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-text-light: #e5e7eb;
+    
+    /* Acento Metálico (Bronze/Dourado Premium) */
+    --color-accent: #b08e5a;
+    --color-accent-hover: #967448;
+    --color-accent-light: #f7f3eb;
+
+    /* Cores de Feedback */
+    --color-danger-bg: #fdf2f2;
+    --color-danger-border: #f8b4b4;
+    --color-danger-text: #9b1c1c;
+    --color-danger-accent: #c0392b;
+
+    --color-success-bg: #edf7ed;
+    --color-success-border: #b7e4c7;
+    --color-success-text: #1b5e20;
+    --color-success-accent: #2e7d32;
+
+    /* Elementos Visuais */
+    --border-color: #e5e7eb;
+    --border-radius-lg: 10px;
+    --border-radius-md: 6px;
+    --border-radius-sm: 4px;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 2. Reset e Configurações de Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utilitários */
+.escondido {
+    display: none !important;
+}
+
+/* 3. Cabeçalho (Header) */
+.admin-header {
+    background-color: var(--color-header);
+    color: var(--color-bg-card);
+    padding: 0 2rem;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    border-bottom: 3px solid var(--color-accent);
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.logos-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo-principal {
+    height: 38px;
+    filter: brightness(0) invert(1); /* Torna o logo branco para contrastar com o header escuro */
+}
+
+.logo-divider {
+    width: 1px;
+    height: 24px;
+    background-color: #374151;
+}
+
+.painel-titulo {
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-text-light);
+}
+
+.btn-tv-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-smooth);
+    letter-spacing: 0.5px;
+}
+
+.btn-tv-link:hover {
+    background-color: var(--color-accent);
+    color: var(--color-header);
+}
+
+.icon-external {
+    transition: transform 0.2s ease;
+}
+
+.btn-tv-link:hover .icon-external {
+    transform: translate(2px, -2px);
+}
+
+/* 4. Layout Container Principal */
+.admin-container {
+    flex: 1;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+}
+
+/* Grid de Gestão */
+.admin-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1.9fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+@media (max-width: 1024px) {
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 5. Cards de Conteúdo */
+.card {
+    background-color: var(--color-bg-card);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    transition: var(--transition-smooth);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    margin-bottom: 2rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    letter-spacing: -0.2px;
+}
+
+.card-subtitle {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-top: 0.35rem;
+}
+
+/* 6. Alertas e Notificações */
+.alerts-container {
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.alert-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.alert-message {
+    flex-grow: 1;
+    font-weight: 500;
+}
+
+.alert-close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 0.25rem;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+}
+
+.alert-close:hover {
+    opacity: 1;
+}
+
+/* Alerta de Perigo (Erro 400) */
+.alert-danger {
+    background-color: var(--color-danger-bg);
+    border: 1px solid var(--color-danger-border);
+    color: var(--color-danger-text);
+}
+
+.alert-danger .alert-close {
+    color: var(--color-danger-text);
+}
+
+/* Alerta de Sucesso */
+.alert-success {
+    background-color: var(--color-success-bg);
+    border: 1px solid var(--color-success-border);
+    color: var(--color-success-text);
+}
+
+.alert-success .alert-close {
+    color: var(--color-success-text);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 7. Formulários */
+.reuniao-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-main);
+}
+
+.form-group input {
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    background-color: #fafbfb;
+    color: var(--color-text-main);
+    transition: var(--transition-smooth);
+    outline: none;
+}
+
+.form-group input::placeholder {
+    color: #a0aec0;
+}
+
+.form-group input:focus {
+    border-color: var(--color-accent);
+    background-color: var(--color-bg-card);
+    box-shadow: 0 0 0 3px rgba(176, 142, 90, 0.15);
+}
+
+/* Ações do Formulário (Botões) */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.85rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    flex: 1;
+}
+
+.btn-primary {
+    background-color: var(--color-accent);
+    color: var(--color-bg-card);
+    box-shadow: 0 2px 4px rgba(176, 142, 90, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(176, 142, 90, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background-color: #e2e8f0;
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
+}
+
+.btn-secondary:hover {
+    background-color: #cbd5e0;
+    color: #2d3748;
+}
+
+/* Spinner e Estados de Loading */
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+.text-spinner {
+    border-color: rgba(176, 142, 90, 0.3);
+    border-top-color: var(--color-accent);
+    width: 24px;
+    height: 24px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 8. Tabela de Agendamentos (Data Grid) */
+.table-card {
+    padding: 2rem 0; /* padding lateral zero para a tabela sangrar até as bordas ou manter padding interno no grid */
+}
+
+.table-card .card-header {
+    padding: 0 2rem;
+}
+
+.table-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.btn-refresh {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-md);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.btn-refresh:hover {
+    background-color: #f7fafc;
+    border-color: #cbd5e0;
+}
+
+.icon-refresh {
+    transition: transform 0.4s ease;
+}
+
+.btn-refresh:hover .icon-refresh {
+    transform: rotate(180deg);
+}
+
+/* Data Grid Wrapper Responsivo */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-top: 1px solid var(--border-color);
+    margin-top: 0.5rem;
+}
+
+.data-grid {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.data-grid th {
+    font-weight: 700;
+    color: var(--color-text-main);
+    text-transform: uppercase;
+    font-size: 0.725rem;
+    letter-spacing: 0.75px;
+    padding: 1.15rem 1.5rem;
+    background-color: #f8fafc;
+    border-bottom: 1.5px solid var(--border-color);
+}
+
+.data-grid td {
+    padding: 1.15rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--color-text-main);
+    font-weight: 500;
+}
+
+.data-grid tbody tr {
+    transition: var(--transition-smooth);
+}
+
+.data-grid tbody tr:hover {
+    background-color: #fafbfc;
+}
+
+/* Células Específicas */
+.td-data {
+    font-weight: 600 !important;
+    color: var(--color-text-main);
+    white-space: nowrap;
+}
+
+.td-hora {
+    font-weight: 600 !important;
+    color: var(--color-accent);
+    white-space: nowrap;
+}
+
+.td-nome {
+    color: var(--color-text-main);
+}
+
+.td-arquiteto, .td-consultor {
+    color: var(--color-text-muted);
+}
+
+.actions-header {
+    text-align: right;
+}
+
+.td-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+/* Botões de Ações na Linha */
+.btn-action {
+    background: none;
+    border: 1px solid var(--border-color);
+    width: 34px;
+    height: 34px;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    color: var(--color-text-muted);
+}
+
+.btn-action:hover {
+    background-color: #fafbfc;
+}
+
+.btn-edit:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    background-color: var(--color-accent-light);
+}
+
+.btn-delete:hover {
+    color: var(--color-danger-accent);
+    border-color: var(--color-danger-border);
+    background-color: var(--color-danger-bg);
+}
+
+/* Mensagens de Feedback Internas da Tabela */
+.td-mensagem {
+    text-align: center;
+    padding: 3rem 1.5rem !important;
+    color: var(--color-text-muted);
+    font-weight: 400 !important;
+}
+
+.td-vazio {
+    font-style: italic;
+    background-color: #fafbfc;
+}
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+}
+
+/* 9. Rodapé */
+.admin-footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--color-bg-card);
+    margin-top: auto;
+}
+
+/* Animações e Efeitos do Modo Edição */
+.card-edit-mode {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 1px var(--color-accent), var(--shadow-lg);
+}
+
+.row-editing {
+    background-color: var(--color-accent-light) !important;
+    border-left: 3px solid var(--color-accent);
+}
+
+/* Legenda Informativa da Regra de Ocupação */
+.form-help-info {
+    margin-top: 0.85rem;
+    font-size: 0.775rem;
+    line-height: 1.45;
+    color: var(--color-text-muted);
+    border-left: 2px solid var(--color-accent);
+    padding-left: 0.75rem;
+}
+
+.info-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background-color: var(--color-accent-light);
+    color: var(--color-accent);
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(176, 142, 90, 0.3);
+    margin-right: 0.25rem;
+    letter-spacing: 0.3px;
+}
+
+/* Forçar exibição visual em caixa alta nos inputs de texto de nomes */
+#nomeCliente, #nomeArquiteto, #nomeConsultor {
+    text-transform: uppercase;
+}

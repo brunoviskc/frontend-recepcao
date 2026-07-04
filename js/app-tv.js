@@ -19,14 +19,17 @@ let reunioesDeHoje = [];
 
 // 1. Função principal que inicia a TV
 async function iniciarTV() {
-    console.log("Iniciando a TV com Inteligência de Horário (+/- 30 min)...");
+    console.log("Iniciando a TV com Inteligência de Horário (+/- 10 min)...");
 
     // Processa a agenda pela primeira vez assim que a página abre
     await processarAgenda();
 
-    // Polling: Roda a cada 1 minuto (60.000 ms) silenciosamente.
-    // Ele busca novos dados na API E recalcula se já deu a hora de trocar a tela.
-    setInterval(processarAgenda, 60000);
+    // Polling de Rede: Roda a cada 30 segundos silenciosamente buscando novos dados
+    setInterval(processarAgenda, 30000);
+
+    // Loop do Relógio: Verifica a cada 1 segundo a hora local do computador.
+    // Isso faz a tela trocar no exato segundo em que o horário de exibição chega.
+    setInterval(decidirOQueMostrarNaTela, 1000);
 }
 
 // 2. Função responsável por buscar no Java e filtrar a data de hoje
@@ -61,9 +64,9 @@ function decidirOQueMostrarNaTela() {
     for (let reuniao of reunioesDeHoje) {
         const minutosReuniao = converterHoraParaMinutos(reuniao.horaReuniao);
 
-        // Regra de Negócio: Janela de 60 minutos total
-        const inicioExibicao = minutosReuniao - 30; // 30 minutos ANTES
-        const fimExibicao = minutosReuniao + 30;    // 30 minutos DEPOIS
+        // Regra de Negócio: Janela de 20 minutos total
+        const inicioExibicao = minutosReuniao - 10; // 10 minutos ANTES
+        const fimExibicao = minutosReuniao + 10;    // 10 minutos DEPOIS
 
         // Se o relógio atual estiver dentro dessa janela, encontramos a reunião da vez!
         if (minutosAtuais >= inicioExibicao && minutosAtuais <= fimExibicao) {
