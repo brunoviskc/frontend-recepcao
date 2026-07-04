@@ -74,15 +74,15 @@ Se utiliza o VS Code, instale a extensão **Live Server**:
 3. As aplicações rodarão localmente em um endereço como `http://127.0.0.1:5500/`.
 
 #### Opção 2: Servidor Estático de Linha de Comando (npm)
-Se você tem o Node.js instalado, utilize o pacote `http-server`:
+Se você tem o Node.js instalado, utilize o pacote `http-server` configurando-o para rodar na porta 5500:
 ```bash
 # Navegue até a pasta do projeto
 cd c:/Users/OG Ambientes/Desktop/Estudo/Hakaton/frontend-recepcao
 
-# Execute o servidor estático
-npx http-server -p 3000
+# Execute o servidor estático na porta 5500
+npx http-server -p 5500
 ```
-Acesse `http://localhost:3000/index.html` para a TV e `http://localhost:3000/admin.html` para o painel.
+Acesse `http://localhost:5500/index.html` para a TV e `http://localhost:5500/admin.html` para o painel.
 
 ---
 
