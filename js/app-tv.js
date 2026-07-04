@@ -92,7 +92,7 @@ function converterHoraParaMinutos(horaString) {
     return (parseInt(partes[0], 10) * 60) + parseInt(partes[1], 10);
 }
 
-// Pinta a tela com o nome do cliente (Durante a janela dos +/- 30 min)
+// Pinta a tela com o nome do cliente (Durante a janela dos +/- 10 min)
 function exibirTelaCliente(nome) {
     // Se você tiver criado as divs separadas no HTML, podemos alterná-las aqui.
     // Usando a sua estrutura base:
